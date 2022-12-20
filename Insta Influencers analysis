@@ -1,0 +1,29 @@
+import pandas as pd
+import numpy as np
+df=pd.read_csv('Influencer.xlsx - Influencer.csv')
+df
+df['Channel Info']=df['Channel Info'].str.replace('\n','')
+df["Followers"]=df["Followers"].replace({"m":"*1e6"}, regex=True).map(pd.eval)
+df["Avg. Likes"]=df["Avg. Likes"].replace({"k":"*1e3","m":"*1e6"}, regex=True).map(pd.eval)
+df["Posts"]=df["Posts"].replace({"k":"*1e3"}, regex=True).map(pd.eval)
+df["New Post Avg. Likes"]=df["New Post Avg. Likes"].replace({"k":"*1e3","m":"*1e6"}, regex=True).map(pd.eval)
+df["Total Likes"]=df["Total Likes"].replace({"b":"*1e9","m":"*1e6"}, regex=True).map(pd.eval)
+df
+df.isnull().sum()
+df['Country Or Region'].fillna(df['Country Or Region'].mode()[0], inplace=True)
+df['Country Or Region']
+df.isnull().sum()
+df.corr().unstack().sort_values().drop_duplicates()
+import matplotlib.pyplot as plt
+plt.hist(df['Influence Score'])
+plt.hist(df['Followers'])
+plt.hist(df['Posts'])
+df['Country Or Region'].value_counts()
+df[['Channel Info', 'Followers']].sort_values('Followers', ascending=False).nlargest(10, 'Followers')
+df[['Channel Info', 'Avg. Likes']].sort_values('Avg. Likes', ascending=False).nlargest(10, 'Avg. Likes')
+df[['Channel Info', 'Total Likes']].sort_values('Total Likes', ascending=False).nlargest(10, 'Total Likes')
+import seaborn as sns
+sns.scatterplot(x='Followers',y='Total Likes',data=df);
+sns.scatterplot(x='Followers',y='Influence Score',data=df);
+sns.scatterplot(x='Posts',y='Avg. Likes',data=df);
+sns.scatterplot(x='Posts',y='Influence Score',data=df);
